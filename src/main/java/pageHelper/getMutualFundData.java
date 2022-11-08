@@ -19,21 +19,27 @@ public class getMutualFundData {
     public static WebDriver driver;
     public static final String chromeDriverPath = "webdriver.chrome.driver";
 
-    public static void launchBrowser() {
+    public static void launchBrowser(String[] tabname) throws IOException {
         String chromeDriverPathForWindows = "src\\main\\resources\\chromedriver_chrome_107\\chromedriver.exe";
         System.setProperty(chromeDriverPath, chromeDriverPathForWindows);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.navigate().to("https://www.mfs.com/en-us/individual-investor/product-strategies/mutual-funds.html?tabname=performance");
+        int iteration = 0;
+        for(String tab: tabname) {
+            System.out.println(iteration + " Tab name is :" + tab);
+            driver.navigate().to("https://www.mfs.com/en-us/individual-investor/product-strategies/mutual-funds.html?tabname="+ tab);
+            getAllPerformanceTabData(tab);
+            iteration++;
+        }
     }
 
 
 
-    public static ArrayList<String> getAllPerformanceTabData() throws IOException {
+    public static ArrayList<String> getAllPerformanceTabData(String tabname) throws IOException {
         int iterationForCategory= 1;
         int iterationForFund =1;
         ArrayList<String> fundLinks = new ArrayList<>();
-        List<WebElement> allCategories = driver.findElements(By.xpath("//*[@id='tab-panel-performance']/div[3]/table/tbody/tr[@class='category']"));
+        List<WebElement> allCategories = driver.findElements(By.xpath("//*[@id='tab-panel-"+tabname+"']/div[3]/table/tbody/tr[@class='category']"));
 
         System.out.println("----------------------------------------------------------------------------------");
         System.out.println("Total Categories are: " + allCategories.size());
