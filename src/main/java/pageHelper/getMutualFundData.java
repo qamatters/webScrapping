@@ -62,23 +62,29 @@ public class getMutualFundData {
     }
 
     public static void getActualDataFromFundPage(String url) throws IOException {
-            System.out.println("----------------------------------------------------");
-            System.out.println("Fund link is: " + url);
-            System.out.println("----------------------------------------------------");
-            String performanceTabURL = url + "#tab-performance/";
-            Document doc = Jsoup.connect(performanceTabURL).get();
-            Elements productDetailPerformanceTab = doc.getElementsByClass("product-detail__performance-tab js-performance-tab js-xx-collapse-handle");
-            String alldata = String.valueOf(productDetailPerformanceTab.get(0));
-            String value = StringUtils.substringBetween(alldata, "data-graphdata", "\">");
-            String[] allArrays = StringUtils.substringsBetween(value, "data&quot;:", "}");
-            List<String> al = Arrays.asList(allArrays);
-            for(int i =0 ;i < al.size(); i++) {
-                System.out.println("----------------------------------------------------");
-                System.out.println(al.get(2));
-                System.out.println(al.get(3));
-                System.out.println("----------------------------------------------------");
-            }
-
+        System.out.println("----------------------------------------------------");
+        System.out.println("Fund link is: " + url);
+        System.out.println("----------------------------------------------------");
+        String performanceTabURL = url + "#tab-performance/";
+        Document doc = Jsoup.connect(performanceTabURL).get();
+        Elements productDetailPerformanceTab = doc.getElementsByClass("product-detail__performance-tab js-performance-tab js-xx-collapse-handle");
+        String alldata = String.valueOf(productDetailPerformanceTab.get(0));
+        String value = StringUtils.substringBetween(alldata, "data-graphdata", "\">");
+        String[] allArrays = StringUtils.substringsBetween(value, "data&quot;:", "}");
+        List<String> al = Arrays.asList(allArrays);
+        System.out.println("----------------------------------------------------");
+        if (al.size() >= 3) {
+            System.out.println(al.get(2));
         }
+        if (al.size() >= 4) {
+            System.out.println(al.get(3));
+        }
+        if(al.size() ==2) {
+            System.out.println(al.get(1));
+        }
+
+        System.out.println("----------------------------------------------------");
+
+    }
 
 }
