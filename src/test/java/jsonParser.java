@@ -11,9 +11,6 @@ import net.minidev.json.parser.JSONParser;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +20,6 @@ import java.io.StringReader;
 public class jsonParser {
     public static void main(String[] args) {
         Frame f = new Frame("JSON Formatter, Validator and Evaluator");
-//        f.setBackground(Color.DARK_GRAY);
 
         final TextArea inputQuery = new TextArea("Enter your query here..");
         inputQuery.setBounds(300, 50, 1000, 60);
@@ -91,11 +87,11 @@ public class jsonParser {
                 "    }\n" +
                 "}");
         queryPlayGround.setBounds(300, 250, 500, 700);
-        queryPlayGround.setFont(new Font("Serif", Font.ITALIC, 18));
+        queryPlayGround.setBounds(300, 250, 700, 780);
 
         final TextArea output = new TextArea("Check the output");
-        output.setBounds(800, 250, 500, 700);
-       // output.setFont(new Font("Serif", Font.BOLD, 18));
+        output.setBounds(1100, 250, 700, 780);
+        // output.setFont(new Font("Serif", Font.BOLD, 18));
         DefaultTableModel model = new DefaultTableModel(new Object[][]{
                 { "JsonPath", "Result" },
                 { "$.store.book[*].author", "The authors of all books" },
@@ -111,7 +107,7 @@ public class jsonParser {
 
         // Create a table and set its model
         JTable table = new JTable(model);
-        table.setBounds(1300, 250, 800, 1000);
+        table.setBounds(1300, 50, 800, 1000);
 
 
         clearOutput.addActionListener(new ActionListener() {
@@ -171,9 +167,9 @@ public class jsonParser {
 
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String json = queryPlayGround.getText();
+                String json = queryPlayGround.getText().trim();
 //                System.out.println("json is :"+ json);
-                String query = inputQuery.getText();
+                String query = inputQuery.getText().trim();
                 Object result = readJson(json, query);
 
 //                System.out.println(" Result is :" + result);
@@ -198,7 +194,7 @@ public class jsonParser {
                                 throw new RuntimeException(ex);
                             }
                         } else {
-                           output.setText(text);
+                            output.setText(text);
                         }
                     }
                 }
@@ -216,7 +212,10 @@ public class jsonParser {
         f.add(table);
         f.add(clearOutput);
 
-        f.setSize(400, 400);
+        f.setSize(new Dimension(800, 600));
+        f.setMinimumSize(new Dimension(800, 600));
+        f.setMaximumSize(new Dimension(1000, 800));
+
         f.setLayout(null);
         f.setVisible(true);
     }
@@ -253,11 +252,11 @@ public class jsonParser {
 
     public static Object readJson(String json, String query) {
         String requestBody = "";
-        if(query.equalsIgnoreCase("$")) {
+        if(query.trim().equalsIgnoreCase("$")) {
             return json;
         } else {
             requestBody = JsonPath.parse(json).jsonString();
-            Object evaluatedResult = jsonParse(requestBody, query);
+            Object evaluatedResult = jsonParse(requestBody, query.trim());
             return evaluatedResult;
         }
     }
@@ -266,13 +265,13 @@ public class jsonParser {
         Object output;
         Gson gson = new Gson();
         try{
-            output = JsonPath.read(json,query);
+            output = JsonPath.read(json,query.trim());
             JsonElement jsonElement = gson.toJsonTree(output);
             String jsonString = gson.toJson(jsonElement);
             System.out.println("output is: "+ jsonString);
             output = jsonString;
         } catch (PathNotFoundException e) {
-            output = "No results for path:"+ query + ". Please check your query.";
+            output = "No results for path:"+ query.trim() + ". Please check your query.";
         }
         return output;
     }
